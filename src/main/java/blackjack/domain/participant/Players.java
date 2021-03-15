@@ -1,9 +1,14 @@
 package blackjack.domain.participant;
 
 import blackjack.domain.card.Deck;
+import blackjack.domain.money.Profits;
 import blackjack.domain.result.MatchResult;
+import blackjack.domain.result.ProfitResult;
 
+import java.math.BigDecimal;
 import java.util.*;
+
+import static blackjack.domain.BlackJackGame.LOSE_RATE;
 
 public class Players {
     private static final String PLAYER_NUMBER_ERROR_MESSAGE = "인원 수는 2 ~ 8명입니다.";
@@ -32,18 +37,29 @@ public class Players {
         }
     }
 
-    public Map<Player, MatchResult> verifyResultByCompareScore(Dealer dealer) {
-        Map<Player, MatchResult> result = new LinkedHashMap<>();
-        for (Player player : players) {
-            result.put(player, dealer.matchGame(player));
-        }
-        return result;
-    }
-
     public void eachPlayerFirstDraw(Deck deck) {
         for (Player player : players) {
             player.firstDraw(deck.drawCard(), deck.drawCard());
         }
+    }
+
+    public ProfitResult calculateFinalProfit(Dealer dealer) {
+        Map<Participant, Profits> profitResult = new LinkedHashMap<>();
+        Profits dealerProfit = new Profits(BigDecimal.ZERO);
+        profitResult.put(dealer, dealerProfit);
+
+        for (Player player : players) {
+            Profits profit = finalProfitByEachStatus(dealer.matchGame(player), player.profit());
+            profitResult.put(player, profit);
+            dealerProfit = dealerProfit.accumulate(profit.multiply(LOSE_RATE));
+        }
+
+        profitResult.put(dealer, dealerProfit);
+        return new ProfitResult(profitResult);
+    }
+
+    private Profits finalProfitByEachStatus(MatchResult matchResult, Profits profit) {
+        return matchResult.finalProfitByEachStatus(profit);
     }
 
     public List<Player> getPlayers() {

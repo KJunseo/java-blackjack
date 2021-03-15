@@ -109,7 +109,7 @@ public class BlackJackController {
         Players players = blackJackGame.getPlayers();
         Dealer dealer = blackJackGame.getDealer();
         OutputView.showAllCards(playersDto(players), new ParticipantDto(dealer));
-        OutputView.showFinalProfitResult(blackJackGame.calculateProfit(players.verifyResultByCompareScore(dealer)));
+        OutputView.showFinalProfitResult(blackJackGame.calculateProfit());
     }
 
     public List<ParticipantDto> playersDto(Players players) {
