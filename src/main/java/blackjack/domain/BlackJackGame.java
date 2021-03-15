@@ -3,13 +3,15 @@ package blackjack.domain;
 import blackjack.domain.card.Card;
 import blackjack.domain.card.Deck;
 import blackjack.domain.money.Profits;
-import blackjack.domain.participant.*;
+import blackjack.domain.participant.Dealer;
+import blackjack.domain.participant.Participant;
+import blackjack.domain.participant.Player;
+import blackjack.domain.participant.Players;
 import blackjack.domain.result.MatchResult;
 import blackjack.domain.result.ProfitResult;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class BlackJackGame {
     private static final BigDecimal LOSE_RATE = new BigDecimal("-1");
@@ -18,23 +20,12 @@ public class BlackJackGame {
     private final Dealer dealer;
     private final Deck deck;
 
-    public BlackJackGame(List<String> playersName) {
-        this(generatePlayers(playersName));
-    }
-
     public BlackJackGame(Players players) {
         this.players = players;
         this.dealer = new Dealer();
         List<Card> cards = new ArrayList<>(Card.values());
         Collections.shuffle(cards);
         this.deck = new Deck(cards);
-    }
-
-    private static Players generatePlayers(List<String> allPlayersName) {
-        return new Players(allPlayersName.stream()
-                .map(Nickname::new)
-                .map(Player::new)
-                .collect(Collectors.toList()));
     }
 
     public void distributeCards() {

@@ -3,6 +3,7 @@ package blackjack.controller;
 import blackjack.domain.BlackJackGame;
 import blackjack.domain.money.BettingMoney;
 import blackjack.domain.participant.Dealer;
+import blackjack.domain.participant.Nickname;
 import blackjack.domain.participant.Player;
 import blackjack.domain.participant.Players;
 import blackjack.dto.ParticipantDto;
@@ -16,7 +17,7 @@ public class BlackJackController {
 
     public void start() {
         try {
-            BlackJackGame blackJackGame = new BlackJackGame(playersName());
+            BlackJackGame blackJackGame = new BlackJackGame(players());
             Players players = blackJackGame.getPlayers();
             bettingPlayers(players);
             distributeCards(blackJackGame);
@@ -29,13 +30,16 @@ public class BlackJackController {
         }
     }
 
-    private List<String> playersName() {
+    private Players players() {
         try {
             OutputView.enterPlayersName();
-            return InputView.inputName();
+            return new Players(InputView.inputName().stream()
+                    .map(Nickname::new)
+                    .map(Player::new)
+                    .collect(Collectors.toList()));
         } catch (IllegalArgumentException e) {
             OutputView.printError(e.getMessage());
-            return playersName();
+            return players();
         }
     }
 
