@@ -15,12 +15,12 @@ public abstract class Started implements State {
     }
 
     @Override
-    public boolean isDraw(State state) {
+    public final boolean isDraw(State state) {
         return cards.isDraw(state.getCards());
     }
 
     @Override
-    public Cards getCards() {
+    public final Cards getCards() {
         return cards;
     }
 }

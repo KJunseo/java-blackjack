@@ -24,19 +24,19 @@ public abstract class Participant {
 
     public abstract boolean canDraw();
 
-    public void firstDraw(Card firstCard, Card secondCard) {
+    public final void firstDraw(Card firstCard, Card secondCard) {
         this.state = StateFactory.draw(firstCard, secondCard);
     }
 
-    public void draw(Card card) {
+    public final void draw(Card card) {
         state = state.draw(card);
     }
 
-    public void stay() {
+    public final void stay() {
         state = state.stay();
     }
 
-    public boolean isHit() {
+    public final boolean isHit() {
         return !state.isFinished();
     }
 

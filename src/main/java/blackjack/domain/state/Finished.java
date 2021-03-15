@@ -17,26 +17,22 @@ public abstract class Finished extends Started {
     public abstract BigDecimal rate();
 
     @Override
-    public Profits profit(BettingMoney money) {
+    public final Profits profit(BettingMoney money) {
         return money.multiply(rate());
     }
 
-    public boolean isWin(State state) {
-        return this.cards.calculateScore() > state.getCards().calculateScore();
-    }
-
     @Override
-    public boolean isFinished() {
+    public final boolean isFinished() {
         return true;
     }
 
     @Override
-    public State draw(Card card) {
+    public final State draw(Card card) {
         throw new IllegalStateException(CANNOT_DRAW_CARD_ERROR_MESSAGE);
     }
 
     @Override
-    public State stay() {
+    public final State stay() {
         throw new IllegalStateException();
     }
 }
