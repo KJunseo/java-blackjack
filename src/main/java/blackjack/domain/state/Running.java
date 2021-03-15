@@ -15,27 +15,27 @@ public abstract class Running extends Started {
     }
 
     @Override
-    public Profits profit(BettingMoney money) {
+    public final Profits profit(BettingMoney money) {
         throw new IllegalStateException();
     }
 
     @Override
-    public boolean isBlackJack() {
+    public final boolean isBlackJack() {
         throw new IllegalStateException();
     }
 
     @Override
-    public boolean isStay() {
+    public final boolean isStay() {
         throw new IllegalStateException();
     }
 
     @Override
-    public boolean isBust() {
+    public final boolean isBust() {
         throw new IllegalStateException();
     }
 
     @Override
-    public boolean isWin(State state) {
+    public final boolean isWin(State state) {
         throw new IllegalStateException();
     }
 }
