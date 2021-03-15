@@ -3,6 +3,7 @@ package blackjack.dto;
 import blackjack.domain.card.Card;
 import blackjack.domain.card.Cards;
 import blackjack.domain.participant.Nickname;
+import blackjack.domain.participant.Participant;
 
 import java.util.List;
 
@@ -11,10 +12,10 @@ public class ParticipantDto {
     private final Cards cards;
     private final int finalScore;
 
-    public ParticipantDto(Nickname name, Cards cards, int finalScore) {
-        this.name = name;
-        this.cards = cards;
-        this.finalScore = finalScore;
+    public ParticipantDto(Participant participant) {
+        this.name = participant.getName();
+        this.cards = participant.getCurrentCards();
+        this.finalScore = cards.calculateScore();
     }
 
     public String getName() {

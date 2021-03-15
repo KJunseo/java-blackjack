@@ -1,10 +1,8 @@
 package blackjack.controller;
 
 import blackjack.domain.BlackJackGame;
-import blackjack.domain.card.Cards;
 import blackjack.domain.money.BettingMoney;
 import blackjack.domain.participant.Dealer;
-import blackjack.domain.participant.Participant;
 import blackjack.domain.participant.Player;
 import blackjack.domain.participant.Players;
 import blackjack.dto.ParticipantDto;
@@ -58,7 +56,7 @@ public class BlackJackController {
 
     private void distributeCards(BlackJackGame blackJackGame) {
         blackJackGame.distributeCards();
-        OutputView.distributeFirstTwoCard(playersDto(blackJackGame.getPlayers()), dealerDto(blackJackGame.getDealer()));
+        OutputView.distributeFirstTwoCard(playersDto(blackJackGame.getPlayers()), new ParticipantDto(blackJackGame.getDealer()));
     }
 
     private void playersTurn(Players players, BlackJackGame blackJackGame) {
@@ -70,13 +68,13 @@ public class BlackJackController {
     private void eachPlayerTurn(Player player, BlackJackGame blackJackGame) {
         while (player.canDraw() && askDrawCard(player)) {
             player.draw(blackJackGame.drawOneCard());
-            OutputView.showCards(playerDto(player));
+            OutputView.showCards(new ParticipantDto(player));
         }
     }
 
     private boolean askDrawCard(Player player) {
         try {
-            OutputView.askOneMoreCard(playerDto(player));
+            OutputView.askOneMoreCard(new ParticipantDto(player));
             boolean wantDraw = InputView.inputAnswer();
             playerWantStopDraw(player, wantDraw);
             return wantDraw;
@@ -88,7 +86,7 @@ public class BlackJackController {
 
     private void playerWantStopDraw(Player player, boolean wantDraw) {
         if (!wantDraw) {
-            OutputView.showCards(playerDto(player));
+            OutputView.showCards(new ParticipantDto(player));
             player.stay();
         }
     }
@@ -106,26 +104,13 @@ public class BlackJackController {
     private void showProfitResult(BlackJackGame blackJackGame) {
         Players players = blackJackGame.getPlayers();
         Dealer dealer = blackJackGame.getDealer();
-        OutputView.showAllCards(playersDto(players), dealerDto(dealer));
+        OutputView.showAllCards(playersDto(players), new ParticipantDto(dealer));
         OutputView.showFinalProfitResult(blackJackGame.calculateProfit(players.verifyResultByCompareScore(dealer)));
     }
 
     public List<ParticipantDto> playersDto(Players players) {
         return players.getPlayers().stream()
-                .map(this::toParticipantDto)
+                .map(ParticipantDto::new)
                 .collect(Collectors.toList());
-    }
-
-    private ParticipantDto toParticipantDto(Participant participant) {
-        Cards cards = participant.getCurrentCards();
-        return new ParticipantDto(participant.getName(), cards, cards.calculateScore());
-    }
-
-    private ParticipantDto dealerDto(Dealer dealer) {
-        return toParticipantDto(dealer);
-    }
-
-    private ParticipantDto playerDto(Player player) {
-        return toParticipantDto(player);
     }
 }
